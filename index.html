@@ -5,7 +5,7 @@
 <title>Journaling Widget</title>
 
 <style>
-/* ⭐ Make it align nicely under your Notion heading */
+/* ⭐ Keep left-aligned under Notion heading */
 html, body {
   margin: 0 !important;
   padding: 0 !important;
@@ -30,27 +30,21 @@ body {
   color: var(--text);
 }
 
-/* CARD – same layout as the version you liked */
+/* CARD (same as perfect version 1) */
 .card {
   width: 100%;
   max-width: 1150px;
-  min-height: 430px;
   background: var(--bg-gradient);
   border: 1px solid var(--border);
   border-radius: 6px;
-  padding: 26px 32px;
+  padding: 26px 32px 34px 32px;
   box-shadow: 0 8px 30px rgba(0,0,0,0.08);
   box-sizing: border-box;
   margin-left: 0 !important;
 }
 
 /* HEADER */
-.label {
-  font-size: 11px;
-  letter-spacing: 2px;
-  opacity: 0.65;
-  font-weight: 600;
-}
+.label { font-size: 11px; letter-spacing: 2px; opacity: 0.65; font-weight: 600; }
 
 .header-top {
   margin-top: 4px;
@@ -59,10 +53,7 @@ body {
   align-items: center;
 }
 
-.title {
-  font-size: 22px;
-  font-weight: 700;
-}
+.title { font-size: 22px; font-weight: 700; }
 
 .chip {
   background: var(--chip-bg);
@@ -70,11 +61,9 @@ body {
   border-radius: 6px;
   font-size: 12px;
   border: 1px solid var(--border);
-  opacity: 0.8;
-  cursor: pointer;
+  cursor: pointer; opacity: 0.8;
 }
 
-/* DIVIDER */
 .divider {
   margin: 12px 0 16px 0;
   height: 1px;
@@ -85,15 +74,13 @@ body {
 .prompt-box {
   background: var(--surface);
   padding: 14px 18px;
-  border-radius: 6px;
   border: 1px solid var(--border);
+  border-radius: 6px;
   margin-bottom: 14px;
 }
-.prompt-text {
-  font-size: 15px;
-}
+.prompt-text { font-size: 15px; }
 
-/* TODAY I FEEL */
+/* FEEL */
 .feel-label {
   font-size: 12px;
   opacity: 0.7;
@@ -108,32 +95,27 @@ textarea {
   background: #FBF8F6;
   border-radius: 6px;
   border: 1px solid var(--border);
-  box-shadow: inset 0 1px 4px rgba(0,0,0,0.06);
   resize: none;
+  box-shadow: inset 0 1px 4px rgba(0,0,0,0.06);
   box-sizing: border-box;
 }
 
-/* MOODS */
+/* MOOD */
 .mood-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
+  display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;
 }
 .mood {
   padding: 6px 14px;
   border-radius: 6px;
-  font-size: 12px;
   background: var(--chip-bg);
   border: 1px solid var(--border);
+  font-size: 12px;
   cursor: pointer;
 }
 
 /* BUTTONS */
 .btn-row {
-  display: flex;
-  gap: 12px;
-  margin-top: 16px;
+  display: flex; gap: 12px; margin-top: 16px;
 }
 .btn {
   flex: 1;
@@ -148,45 +130,32 @@ textarea {
 .btn.secondary { background: var(--accent-soft); }
 
 /* FOOTER */
-.footer-note {
-  font-size: 12px;
-  opacity: 0.7;
-  margin-top: 10px;
-}
-.footer-quote {
-  font-size: 13px;
-  font-style: italic;
-  opacity: 0.8;
-  margin-top: 4px;
-}
+.footer-note { font-size: 12px; opacity: 0.7; margin-top: 10px; }
+.footer-quote { font-size: 13px; opacity: 0.8; font-style: italic; margin-top: 4px; }
 
-/* ⭐ ARCHIVES BELOW THE CARD (minimal, safe) */
-.archives-wrapper {
-  width: 100%;
-  max-width: 1150px;
-  box-sizing: border-box;
-  padding: 10px 32px 24px 32px;
-  font-size: 13px;
-  color: var(--text);
+/* ⭐ ARCHIVES INSIDE THE CARD */
+.archives-section {
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0,0,0,0.12);
 }
 
 .archives-title {
   font-weight: 600;
   opacity: 0.75;
   cursor: pointer;
+  font-size: 14px;
 }
 
 .archives-list {
   display: none;
-  margin-top: 8px;
-  border-top: 1px solid #e6d7d0;
-  padding-top: 8px;
+  margin-top: 10px;
 }
 
 .archive-entry {
-  margin-bottom: 10px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #f0e3dd;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e8dcd5;
 }
 
 .archive-date {
@@ -243,18 +212,18 @@ textarea {
   <div class="footer-note">✓ Auto-saves to this browser.</div>
   <div id="quote" class="footer-quote"></div>
 
-</div>
-
-<!-- ⭐ ARCHIVES BELOW THE CARD (safest placement) -->
-<div class="archives-wrapper">
-  <div id="archivesTitle" class="archives-title" onclick="toggleArchives()">
-    ▸ Archives
+  <!-- ⭐ NEW: ARCHIVES INSIDE THE CARD -->
+  <div class="archives-section">
+    <div id="archivesTitle" class="archives-title" onclick="toggleArchives()">
+      ▸ Archives
+    </div>
+    <div id="archivesList" class="archives-list"></div>
   </div>
-  <div id="archivesList" class="archives-list"></div>
+
 </div>
 
 <script>
-/* ⭐ FULL PROMPT LIST (40+) */
+/* PROMPTS (40+) */
 const prompts = [
   "What is something small you're proud of today?",
   "Where can you be gentler with yourself?",
@@ -298,13 +267,13 @@ const prompts = [
   "What are you learning to trust?"
 ];
 
-/* ⭐ SHUFFLE PROMPT */
+/* SHUFFLE PROMPT */
 function shufflePrompt() {
-  const p = document.getElementById("prompt");
-  p.innerText = prompts[Math.floor(Math.random() * prompts.length)];
+  document.getElementById("prompt").innerText =
+    prompts[Math.floor(Math.random() * prompts.length)];
 }
 
-/* ⭐ ENTRY SAVE / RESTORE */
+/* SAVE ENTRY */
 const entryBox = document.getElementById("entry");
 entryBox.value = localStorage.getItem("journalEntry") || "";
 
@@ -312,7 +281,7 @@ function saveEntry() {
   localStorage.setItem("journalEntry", entryBox.value);
 }
 
-/* ⭐ ARCHIVE ON CLEAR (NEWEST FIRST) */
+/* ARCHIVE ON CLEAR (newest first) */
 function archiveEntry() {
   const text = entryBox.value.trim();
   if (!text) return;
@@ -327,8 +296,8 @@ function archiveEntry() {
     minute: "2-digit"
   });
 
-  // Newest first
   archives.unshift({ date: timestamp, text });
+
   localStorage.setItem("journalArchives", JSON.stringify(archives));
 }
 
@@ -339,7 +308,7 @@ function clearEntry() {
   renderArchives();
 }
 
-/* ⭐ MOODS (just visual + saved in localStorage) */
+/* MOODS */
 document.querySelectorAll(".mood").forEach(m => {
   m.addEventListener("click", () => {
     document.querySelectorAll(".mood").forEach(x => x.classList.remove("active"));
@@ -355,7 +324,7 @@ if (savedMood) {
   });
 }
 
-/* ⭐ FULL QUOTES LIST (30+) */
+/* QUOTES */
 const quotes = [
   "Every moment you pause is a moment you heal.",
   "Softness is strength.",
@@ -363,36 +332,26 @@ const quotes = [
   "Your pace is valid.",
   "Gentle progress is still progress.",
   "You are becoming someone beautiful.",
-  "You don’t need to rush your growth.",
   "Your presence is enough.",
   "Healing is happening quietly.",
-  "You’re doing better than you realize.",
   "Your energy is sacred—protect it.",
+  "You’re allowed to begin again.",
   "Let yourself move slowly.",
-  "You deserve tenderness from yourself.",
   "Your softness is not a flaw.",
-  "Resting is productive.",
-  "Peace begins with a single breath.",
-  "You are allowed to begin again.",
-  "You’re allowed to change.",
-  "You are worthy of gentle days.",
-  "Clarity comes when you stop forcing.",
-  "There is beauty in becoming.",
-  "Let yourself feel it all.",
-  "Your worth isn’t tied to productivity.",
-  "Let today be softer than yesterday.",
-  "You don’t have to be strong all the time.",
-  "You are enough, even on quiet days.",
-  "Your heart deserves peace.",
-  "Release the pressure to be perfect.",
-  "You are allowed to slow down.",
-  "Your inner world matters."
+  "You deserve tenderness.",
+  "Peace begins within.",
+  "You don’t need to rush.",
+  "Your inner world matters.",
+  "You’re doing better than you think.",
+  "You deserve gentle days.",
+  "Release perfection.",
+  "Your heart deserves peace."
 ];
 
 document.getElementById("quote").innerText =
   quotes[Math.floor(Math.random() * quotes.length)];
 
-/* ⭐ MINIMAL ARCHIVES BELOW CARD */
+/* ARCHIVES (INSIDE CARD NOW) */
 function renderArchives() {
   const listEl = document.getElementById("archivesList");
   const archives = JSON.parse(localStorage.getItem("journalArchives") || "[]");
@@ -420,14 +379,13 @@ function toggleArchives() {
 
   if (list.style.display === "block") {
     list.style.display = "none";
-    title.innerText = "▸ Archives";
+    title.innerHTML = "▸ Archives";
   } else {
     list.style.display = "block";
-    title.innerText = "▾ Archives";
+    title.innerHTML = "▾ Archives";
   }
 }
 
-/* Initial render */
 renderArchives();
 </script>
 
