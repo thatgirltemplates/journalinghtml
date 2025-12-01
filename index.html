@@ -2,11 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Journaling Widget (HTML Only)</title>
+<title>Journaling Widget</title>
 
 <style>
-
-/* ⭐ FIX: FORCE LEFT ALIGNMENT INSIDE NOTION */
+/* ⭐ Make it align nicely under your Notion heading */
 html, body {
   margin: 0 !important;
   padding: 0 !important;
@@ -14,12 +13,7 @@ html, body {
   display: block !important;
 }
 
-/* Fix tiny Notion offset */
-.card {
-  margin-left: 0 !important;
-}
-
-/* ORIGINAL STYLES */
+/* COLOR SYSTEM */
 :root {
   --bg-gradient: linear-gradient(180deg, #F5EDE9, #F2E8E3);
   --surface: #FBF8F6;
@@ -36,7 +30,7 @@ body {
   color: var(--text);
 }
 
-/* CARD */
+/* CARD – same layout as the version you liked */
 .card {
   width: 100%;
   max-width: 1150px;
@@ -47,6 +41,7 @@ body {
   padding: 26px 32px;
   box-shadow: 0 8px 30px rgba(0,0,0,0.08);
   box-sizing: border-box;
+  margin-left: 0 !important;
 }
 
 /* HEADER */
@@ -76,8 +71,10 @@ body {
   font-size: 12px;
   border: 1px solid var(--border);
   opacity: 0.8;
+  cursor: pointer;
 }
 
+/* DIVIDER */
 .divider {
   margin: 12px 0 16px 0;
   height: 1px;
@@ -92,12 +89,11 @@ body {
   border: 1px solid var(--border);
   margin-bottom: 14px;
 }
-
 .prompt-text {
   font-size: 15px;
 }
 
-/* FEEL LABEL */
+/* TODAY I FEEL */
 .feel-label {
   font-size: 12px;
   opacity: 0.7;
@@ -117,29 +113,28 @@ textarea {
   box-sizing: border-box;
 }
 
-/* MOOD BUTTONS */
+/* MOODS */
 .mood-row {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 10px;
 }
-
 .mood {
   padding: 6px 14px;
   border-radius: 6px;
   font-size: 12px;
   background: var(--chip-bg);
   border: 1px solid var(--border);
+  cursor: pointer;
 }
 
-/* BUTTON ROW */
+/* BUTTONS */
 .btn-row {
   display: flex;
   gap: 12px;
   margin-top: 16px;
 }
-
 .btn {
   flex: 1;
   text-align: center;
@@ -148,11 +143,9 @@ textarea {
   background: var(--accent);
   color: white;
   font-size: 14px;
+  cursor: pointer;
 }
-
-.btn.secondary {
-  background: var(--accent-soft);
-}
+.btn.secondary { background: var(--accent-soft); }
 
 /* FOOTER */
 .footer-note {
@@ -160,7 +153,6 @@ textarea {
   opacity: 0.7;
   margin-top: 10px;
 }
-
 .footer-quote {
   font-size: 13px;
   font-style: italic;
@@ -168,6 +160,45 @@ textarea {
   margin-top: 4px;
 }
 
+/* ⭐ ARCHIVES BELOW THE CARD (minimal, safe) */
+.archives-wrapper {
+  width: 100%;
+  max-width: 1150px;
+  box-sizing: border-box;
+  padding: 10px 32px 24px 32px;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.archives-title {
+  font-weight: 600;
+  opacity: 0.75;
+  cursor: pointer;
+}
+
+.archives-list {
+  display: none;
+  margin-top: 8px;
+  border-top: 1px solid #e6d7d0;
+  padding-top: 8px;
+}
+
+.archive-entry {
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f0e3dd;
+}
+
+.archive-date {
+  font-size: 11px;
+  opacity: 0.65;
+  margin-bottom: 3px;
+}
+
+.archive-text {
+  font-size: 13px;
+  white-space: pre-wrap;
+}
 </style>
 </head>
 
@@ -179,20 +210,20 @@ textarea {
 
   <div class="header-top">
     <div class="title">Today’s Journaling</div>
-    <div class="chip">Shuffle prompt</div>
+    <div class="chip" onclick="shufflePrompt()">Shuffle prompt</div>
   </div>
 
   <div class="divider"></div>
 
   <div class="prompt-box">
-    <div class="prompt-text">
+    <div id="prompt" class="prompt-text">
       What is something small you're proud of today?
     </div>
   </div>
 
   <div class="feel-label">Today I feel…</div>
 
-  <textarea placeholder="Write your thoughts…"></textarea>
+  <textarea id="entry" placeholder="Write your thoughts…"></textarea>
 
   <div class="mood-row">
     <div class="mood">aligned</div>
@@ -205,14 +236,200 @@ textarea {
   </div>
 
   <div class="btn-row">
-    <div class="btn">Save entry</div>
-    <div class="btn secondary">Clear</div>
+    <div class="btn" onclick="saveEntry()">Save entry</div>
+    <div class="btn secondary" onclick="clearEntry()">Clear</div>
   </div>
 
   <div class="footer-note">✓ Auto-saves to this browser.</div>
-  <div class="footer-quote">Every moment you pause is a moment you heal.</div>
+  <div id="quote" class="footer-quote"></div>
 
 </div>
+
+<!-- ⭐ ARCHIVES BELOW THE CARD (safest placement) -->
+<div class="archives-wrapper">
+  <div id="archivesTitle" class="archives-title" onclick="toggleArchives()">
+    ▸ Archives
+  </div>
+  <div id="archivesList" class="archives-list"></div>
+</div>
+
+<script>
+/* ⭐ FULL PROMPT LIST (40+) */
+const prompts = [
+  "What is something small you're proud of today?",
+  "Where can you be gentler with yourself?",
+  "What boundary would support you this week?",
+  "What made you smile today?",
+  "What is one thing you want to release right now?",
+  "What is a reminder your future self would give you?",
+  "What fear can you let go of today?",
+  "How can you show up for yourself in a softer way?",
+  "What is something you're grateful for in this moment?",
+  "What inspired you recently?",
+  "What made you feel grounded today?",
+  "What is one thing you want to thank yourself for?",
+  "What did you learn about yourself recently?",
+  "What can you simplify in your life right now?",
+  "What emotion is taking up the most space today?",
+  "What is something you wish someone would tell you?",
+  "What would bring you peace today?",
+  "What are you craving more of in your life?",
+  "What do you want tomorrow to feel like?",
+  "What is a truth you’re learning to accept?",
+  "What would the kindest version of you choose?",
+  "What do you need to forgive yourself for?",
+  "What are you proud of surviving?",
+  "What would make today feel fulfilling?",
+  "What is something you're looking forward to?",
+  "How can you support your mental health this week?",
+  "What is one thing you want to stop apologizing for?",
+  "What’s something you want to create space for?",
+  "What is taking up too much of your energy?",
+  "What did your inner child need to hear today?",
+  "What feels aligned for you right now?",
+  "What part of you needs attention and care?",
+  "What can you release to feel lighter?",
+  "What’s one way you can honor yourself today?",
+  "What is a tiny joy you want to embrace?",
+  "What can you celebrate about yourself?",
+  "What is something you want to change gently?",
+  "What made you feel safe recently?",
+  "What belief are you outgrowing?",
+  "What are you learning to trust?"
+];
+
+/* ⭐ SHUFFLE PROMPT */
+function shufflePrompt() {
+  const p = document.getElementById("prompt");
+  p.innerText = prompts[Math.floor(Math.random() * prompts.length)];
+}
+
+/* ⭐ ENTRY SAVE / RESTORE */
+const entryBox = document.getElementById("entry");
+entryBox.value = localStorage.getItem("journalEntry") || "";
+
+function saveEntry() {
+  localStorage.setItem("journalEntry", entryBox.value);
+}
+
+/* ⭐ ARCHIVE ON CLEAR (NEWEST FIRST) */
+function archiveEntry() {
+  const text = entryBox.value.trim();
+  if (!text) return;
+
+  const archives = JSON.parse(localStorage.getItem("journalArchives") || "[]");
+
+  const timestamp = new Date().toLocaleString([], {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+
+  // Newest first
+  archives.unshift({ date: timestamp, text });
+  localStorage.setItem("journalArchives", JSON.stringify(archives));
+}
+
+function clearEntry() {
+  archiveEntry();
+  entryBox.value = "";
+  localStorage.removeItem("journalEntry");
+  renderArchives();
+}
+
+/* ⭐ MOODS (just visual + saved in localStorage) */
+document.querySelectorAll(".mood").forEach(m => {
+  m.addEventListener("click", () => {
+    document.querySelectorAll(".mood").forEach(x => x.classList.remove("active"));
+    m.classList.add("active");
+    localStorage.setItem("journalMood", m.innerText);
+  });
+});
+
+const savedMood = localStorage.getItem("journalMood");
+if (savedMood) {
+  document.querySelectorAll(".mood").forEach(m => {
+    if (m.innerText === savedMood) m.classList.add("active");
+  });
+}
+
+/* ⭐ FULL QUOTES LIST (30+) */
+const quotes = [
+  "Every moment you pause is a moment you heal.",
+  "Softness is strength.",
+  "You are allowed to rest.",
+  "Your pace is valid.",
+  "Gentle progress is still progress.",
+  "You are becoming someone beautiful.",
+  "You don’t need to rush your growth.",
+  "Your presence is enough.",
+  "Healing is happening quietly.",
+  "You’re doing better than you realize.",
+  "Your energy is sacred—protect it.",
+  "Let yourself move slowly.",
+  "You deserve tenderness from yourself.",
+  "Your softness is not a flaw.",
+  "Resting is productive.",
+  "Peace begins with a single breath.",
+  "You are allowed to begin again.",
+  "You’re allowed to change.",
+  "You are worthy of gentle days.",
+  "Clarity comes when you stop forcing.",
+  "There is beauty in becoming.",
+  "Let yourself feel it all.",
+  "Your worth isn’t tied to productivity.",
+  "Let today be softer than yesterday.",
+  "You don’t have to be strong all the time.",
+  "You are enough, even on quiet days.",
+  "Your heart deserves peace.",
+  "Release the pressure to be perfect.",
+  "You are allowed to slow down.",
+  "Your inner world matters."
+];
+
+document.getElementById("quote").innerText =
+  quotes[Math.floor(Math.random() * quotes.length)];
+
+/* ⭐ MINIMAL ARCHIVES BELOW CARD */
+function renderArchives() {
+  const listEl = document.getElementById("archivesList");
+  const archives = JSON.parse(localStorage.getItem("journalArchives") || "[]");
+
+  if (!archives.length) {
+    listEl.innerHTML = "<div style='opacity:0.6;'>No archived entries yet.</div>";
+    return;
+  }
+
+  listEl.innerHTML = archives
+    .map(
+      a => `
+      <div class="archive-entry">
+        <div class="archive-date">${a.date}</div>
+        <div class="archive-text">${a.text}</div>
+      </div>
+    `
+    )
+    .join("");
+}
+
+function toggleArchives() {
+  const list = document.getElementById("archivesList");
+  const title = document.getElementById("archivesTitle");
+
+  if (list.style.display === "block") {
+    list.style.display = "none";
+    title.innerText = "▸ Archives";
+  } else {
+    list.style.display = "block";
+    title.innerText = "▾ Archives";
+  }
+}
+
+/* Initial render */
+renderArchives();
+</script>
 
 </body>
 </html>
