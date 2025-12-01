@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Journaling Widget (HTML Only)</title>
+
+<style>
+:root {
+  --bg-gradient: linear-gradient(180deg, #F5EDE9, #F2E8E3);
+  --surface: #FBF8F6;
+  --text: #3A302C;
+  --accent: #B99372;
+  --accent-soft: #D7C1B3;
+  --border: #E6D7D0;
+  --chip-bg: #F5EDE9;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  color: var(--text);
+}
+
+.card {
+  width: 100%;
+  max-width: 1150px;
+  min-height: 430px;
+  background: var(--bg-gradient);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 26px 32px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+  box-sizing: border-box;
+}
+
+.label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  opacity: 0.65;
+  font-weight: 600;
+}
+
+.header-top {
+  margin-top: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.chip {
+  background: var(--chip-bg);
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  opacity: 0.8;
+}
+
+.divider {
+  margin: 12px 0 16px 0;
+  height: 1px;
+  background: rgba(0,0,0,0.12);
+}
+
+.prompt-box {
+  background: var(--surface);
+  padding: 14px 18px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  margin-bottom: 14px;
+}
+
+.prompt-text {
+  font-size: 15px;
+}
+
+.feel-label {
+  font-size: 12px;
+  opacity: 0.7;
+  margin-bottom: 6px;
+}
+
+textarea {
+  width: 100%;
+  height: 110px;
+  padding: 14px 16px;
+  background: #FBF8F6;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  box-shadow: inset 0 1px 4px rgba(0,0,0,0.06);
+  resize: none;
+  box-sizing: border-box;
+}
+
+.mood-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.mood {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  background: var(--chip-bg);
+  border: 1px solid var(--border);
+}
+
+.btn-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.btn {
+  flex: 1;
+  text-align: center;
+  padding: 12px 0;
+  border-radius: 6px;
+  background: var(--accent);
+  color: white;
+  font-size: 14px;
+}
+
+.btn.secondary {
+  background: var(--accent-soft);
+}
+
+.footer-note {
+  font-size: 12px;
+  opacity: 0.7;
+  margin-top: 10px;
+}
+
+.footer-quote {
+  font-size: 13px;
+  font-style: italic;
+  opacity: 0.8;
+  margin-top: 4px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+  <div class="label">WELLNESS</div>
+
+  <div class="header-top">
+    <div class="title">Today’s Journaling</div>
+    <div class="chip">Shuffle prompt</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="prompt-box">
+    <div class="prompt-text">
+      What is something small you're proud of today?
+    </div>
+  </div>
+
+  <div class="feel-label">Today I feel…</div>
+
+  <textarea placeholder="Write your thoughts…"></textarea>
+
+  <div class="mood-row">
+    <div class="mood">aligned</div>
+    <div class="mood">grateful</div>
+    <div class="mood">reflective</div>
+    <div class="mood">low energy</div>
+    <div class="mood">overwhelmed</div>
+    <div class="mood">calm</div>
+    <div class="mood">motivated</div>
+  </div>
+
+  <div class="btn-row">
+    <div class="btn">Save entry</div>
+    <div class="btn secondary">Clear</div>
+  </div>
+
+  <div class="footer-note">✓ Auto-saves to this browser.</div>
+  <div class="footer-quote">Every moment you pause is a moment you heal.</div>
+
+</div>
+
+</body>
+</html>
